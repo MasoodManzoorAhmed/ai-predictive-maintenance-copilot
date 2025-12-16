@@ -12,7 +12,7 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# (Optional) Disable oneDNN to reduce warning noise / keep more stable numerics
+# Reduce TensorFlow CPU noise / keep numerics stable
 ENV TF_ENABLE_ONEDNN_OPTS=0
 
 # ----------------------
@@ -28,10 +28,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # ----------------------
-# Install Python dependencies (LOCKED for Linux)
+# Python dependencies (Linux-locked)
+# ----------------------
 # IMPORTANT:
-# - requirements.lock.txt is generated on Windows and may include Windows-only wheels
-# - We use infra/requirements.docker.lock.txt (tensorflow-intel removed)
+# - Do NOT use Windows lock inside Docker
+# - Use infra/requirements.docker.lock.txt only
 # ----------------------
 COPY infra/requirements.docker.lock.txt /app/requirements.docker.lock.txt
 
@@ -39,13 +40,24 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
     && pip install --no-cache-dir -r /app/requirements.docker.lock.txt
 
 # ----------------------
-# Copy application code + artifacts
+# Application code
 # ----------------------
 COPY backend /app/backend
 COPY configs /app/configs
-COPY models /app/models
 
-# Swagger payloads (optional, for quick curl testing)
+# ----------------------
+# Models handling (CI-SAFE)
+# ----------------------
+# Models are NOT copied during CI build gate.
+# In production, models are:
+# - mounted as volume OR
+# - downloaded at runtime OR
+# - provided via artifact store (S3/GCS/MLflow)
+RUN mkdir -p /app/models
+
+# ----------------------
+# Swagger payloads (optional)
+# ----------------------
 COPY *.json /app/
 
 # ----------------------
