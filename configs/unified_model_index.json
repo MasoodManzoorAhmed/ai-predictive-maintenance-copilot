@@ -1,0 +1,6 @@
+{
+  "FD001": { "config_path": "configs/FD001_config.json" },
+  "FD002": { "config_path": "configs/FD002_config.json" },
+  "FD003": { "config_path": "configs/FD003_config.json" },
+  "FD004": { "config_path": "configs/FD004_config.json" }
+}

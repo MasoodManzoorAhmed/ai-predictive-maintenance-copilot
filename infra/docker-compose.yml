@@ -1,0 +1,37 @@
+
+
+services:
+  cmaps-api:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.api
+    container_name: cmaps_api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+    # ✅ HEALTHCHECK (enterprise-ready)
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  streamlit-ui:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.streamlit
+    container_name: cmaps_streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE_URL=http://cmaps-api:8000
+      - API_TIMEOUT=30
+
+    # ✅ WAIT FOR API TO BE HEALTHY
+    depends_on:
+      cmaps-api:
+        condition: service_healthy
+
+    restart: unless-stopped

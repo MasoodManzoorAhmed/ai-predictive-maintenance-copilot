@@ -1,0 +1,59 @@
+# ======================================================
+# CMAPSS Predictive Maintenance API
+# Phase 7 — Docker + MLOps
+# Runtime: Python 3.10 + TensorFlow 2.16 (Linux container)
+# ======================================================
+
+FROM python:3.10-slim
+
+# ----------------------
+# Environment settings
+# ----------------------
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# (Optional) Disable oneDNN to reduce warning noise / keep more stable numerics
+ENV TF_ENABLE_ONEDNN_OPTS=0
+
+# ----------------------
+# Working directory
+# ----------------------
+WORKDIR /app
+
+# ----------------------
+# System dependencies
+# ----------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# ----------------------
+# Install Python dependencies (LOCKED for Linux)
+# IMPORTANT:
+# - requirements.lock.txt is generated on Windows and may include Windows-only wheels
+# - We use infra/requirements.docker.lock.txt (tensorflow-intel removed)
+# ----------------------
+COPY infra/requirements.docker.lock.txt /app/requirements.docker.lock.txt
+
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r /app/requirements.docker.lock.txt
+
+# ----------------------
+# Copy application code + artifacts
+# ----------------------
+COPY backend /app/backend
+COPY configs /app/configs
+COPY models /app/models
+
+# Swagger payloads (optional, for quick curl testing)
+COPY *.json /app/
+
+# ----------------------
+# Expose API port
+# ----------------------
+EXPOSE 8000
+
+# ----------------------
+# Start FastAPI
+# ----------------------
+CMD ["uvicorn", "backend.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

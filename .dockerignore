@@ -1,0 +1,23 @@
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE / OS
+.vscode/
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Not needed in Docker
+notebooks/
+tests/
+data/
+
+# Logs
+*.log

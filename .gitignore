@@ -1,0 +1,57 @@
+# -------------------------
+# Environment variables
+# -------------------------
+.env
+.env.*
+!.env.example
+
+# -------------------------
+# Python cache
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# -------------------------
+# OS files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# Streamlit
+# -------------------------
+.streamlit/
+
+# -------------------------
+# Virtual environments
+# -------------------------
+.venv/
+venv/
+.env.venv/
+
+# -------------------------
+# Data / logs / artifacts (IMPORTANT)
+# -------------------------
+data/
+logs/
+*.log
+
+# (optional but recommended for GitHub)
+# keep models out of git; store via releases/cloud later
+models/
+artifacts/
+mlruns/
+
+# -------------------------
+# Jupyter / Notebooks
+# -------------------------
+.ipynb_checkpoints/
+
+# -------------------------
+# Build / distribution
+# -------------------------
+build/
+dist/
+*.egg-info/
