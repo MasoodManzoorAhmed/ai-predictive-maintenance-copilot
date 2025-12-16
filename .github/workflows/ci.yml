@@ -2,6 +2,7 @@ name: CI Build Gate
 
 on:
   push:
+    branches: ["main"]
   pull_request:
 
 jobs:
@@ -9,9 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -22,13 +25,17 @@ jobs:
           pip install pytest ruff
 
       - name: Lint (ruff)
-        run: ruff check .
+        run: |
+          ruff check .
 
       - name: Unit tests
-        run: pytest -q
+        run: |
+          pytest -q
 
       - name: Docker build (API)
-        run: docker build -f infra/Dockerfile.api -t cmaps-api:ci .
+        run: |
+          docker build -f infra/Dockerfile.api -t cmaps-api:ci .
 
       - name: Docker build (Streamlit)
-        run: docker build -f infra/Dockerfile.streamlit -t cmaps-ui:ci .
+        run: |
+          docker build -f infra/Dockerfile.streamlit -t cmaps-ui:ci .
