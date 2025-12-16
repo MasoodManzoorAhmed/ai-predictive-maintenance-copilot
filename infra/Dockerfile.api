@@ -56,9 +56,10 @@ RUN mkdir -p /app/models
 COPY models /app/models
 
 # ----------------------
-# Swagger payloads (for quick curl testing)
-# ----------------------
-COPY *.json /app/
+# Swagger payloads are optional (CI/Cloud Build might not upload them)
+RUN mkdir -p /app/samples/payloads
+COPY samples/payloads/*.json /app/samples/payloads/
+
 
 # ----------------------
 # Expose API port
