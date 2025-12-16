@@ -66,3 +66,19 @@ dist/
 # *.h5
 # *.keras
 # *.pkl
+
+# -------------------------
+# Local API payloads (swagger / curl test files)
+# -------------------------
+fd001_*_swagger.json
+fd001_*_to_batch.json
+fd002_*_swagger.json
+fd002_*_to_batch.json
+fd003_*_swagger.json
+fd003_*_to_batch.json
+fd004_*_swagger.json
+fd004_*_to_batch.json
+
+# If you also have generic generated json:
+*_from_single_to_batch.json
+*_single_wrapped.json
