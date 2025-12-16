@@ -32,15 +32,15 @@ venv/
 .env.venv/
 
 # -------------------------
-# Data / logs / artifacts (IMPORTANT)
+# Data / logs / artifacts
 # -------------------------
 data/
 logs/
 *.log
 
-# (optional but recommended for GitHub)
-# keep models out of git; store via releases/cloud later
-models/
+# -------------------------
+# MLOps artifacts (optional)
+# -------------------------
 artifacts/
 mlruns/
 
@@ -55,3 +55,14 @@ mlruns/
 build/
 dist/
 *.egg-info/
+
+# -------------------------
+# IMPORTANT: Models are REQUIRED for Docker/Cloud Run in your current demo
+# -------------------------
+!models/
+!models/**
+
+# If you want to ignore ONLY huge models later, do it by extension (optional):
+# *.h5
+# *.keras
+# *.pkl
