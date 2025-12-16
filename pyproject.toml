@@ -1,0 +1,26 @@
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+# IMPORTANT: don’t lint notebook-exported scripts / big artifacts
+exclude = [
+  ".venv",
+  ".git",
+  "__pycache__",
+  "notebooks",
+  "data",
+  "models",
+  "logs",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = [
+  "E402",  # allow non-top imports (notebook/streamlit style)
+  "E501",  # line length (we enforce manually, not via CI)
+]
+
+# Per-file relaxations: keep backend strict, UI flexible
+[tool.ruff.lint.per-file-ignores]
+"streamlit_app/app.py" = ["E501"]
+"streamlit_app/pages/*.py" = ["E501"]

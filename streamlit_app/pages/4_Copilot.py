@@ -1,17 +1,17 @@
 # ai_predictive_maintenance_copilot/streamlit_app/pages/4_Copilot.py
 from __future__ import annotations
 
-import os
 import io
 import json
+import os
 from datetime import datetime
-from typing import Any, Dict, Optional, Tuple, List
+from typing import Any, Dict, List, Optional, Tuple
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
-import matplotlib.pyplot as plt
 
 # =========================
 # OPTIONAL PDF export (ReportLab) — Option B (SAFE)

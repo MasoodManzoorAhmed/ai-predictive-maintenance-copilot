@@ -1,8 +1,9 @@
 # make_sample_csv.py
 from __future__ import annotations
 
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 # =============================
 # CONFIG
@@ -103,9 +104,9 @@ def save_window_csv(df_unit: pd.DataFrame, fd_name: str, unit_id: int, mode: str
 
 
 def generate_samples_for_fd(fd_name: str):
-    print(f"\n==============================")
+    print("\n==============================")
     print(f"📦 Processing {fd_name}")
-    print(f"==============================")
+    print("==============================")
 
     raw_path = find_raw_file(fd_name)
     print("✅ Found:", raw_path.resolve())

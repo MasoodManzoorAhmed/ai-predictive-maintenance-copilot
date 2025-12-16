@@ -3,11 +3,11 @@
 FD004 RUL prediction router (thin but strict).
 """
 
-from fastapi import APIRouter, HTTPException
 import pandas as pd
+from fastapi import APIRouter, HTTPException
 
 from backend.api.models.requests import FD004BatchRequest
-from backend.api.models.responses import FD004PredictionResponse, EnginePrediction
+from backend.api.models.responses import EnginePrediction, FD004PredictionResponse
 from backend.api.services.inference_engine import run_fd_inference
 from backend.api.utils.config_reader import load_fd_config
 

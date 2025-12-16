@@ -10,8 +10,8 @@ Design:
 - Reuse inference_engine with allow_padding=True (demo friendly)
 """
 
-from fastapi import APIRouter, HTTPException
 import pandas as pd
+from fastapi import APIRouter, HTTPException
 
 from backend.api.models.requests import SingleEngineRequest
 from backend.api.models.responses import SingleEnginePredictionResponse

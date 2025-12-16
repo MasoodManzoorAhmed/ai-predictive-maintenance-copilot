@@ -9,11 +9,11 @@ Responsibilities:
 - Delegate inference to service layer
 """
 
-from fastapi import APIRouter, HTTPException
 import pandas as pd
+from fastapi import APIRouter, HTTPException
 
 from backend.api.models.requests import FD001BatchRequest
-from backend.api.models.responses import FD001PredictionResponse, EnginePrediction
+from backend.api.models.responses import EnginePrediction, FD001PredictionResponse
 from backend.api.services.inference_engine import run_fd_inference
 from backend.api.utils.config_reader import load_fd_config
 

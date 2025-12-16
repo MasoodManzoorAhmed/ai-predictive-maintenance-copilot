@@ -8,6 +8,7 @@ We keep this separate so:
 """
 
 from typing import Tuple
+
 import numpy as np
 
 

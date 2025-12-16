@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-import os
 import json
-from typing import Any, Dict, Optional, Tuple, List
+import os
+from typing import Any, Dict, List, Optional, Tuple
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 import streamlit as st
-import matplotlib.pyplot as plt
-
 
 # ============================================================
 # FD rules (match backend expectations)

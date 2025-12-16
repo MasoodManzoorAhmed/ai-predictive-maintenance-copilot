@@ -16,8 +16,8 @@ SOURCE OF TRUTH:
 - Paths come from the FD config JSON (configs/FD00X_config.json)
 """
 
-from typing import Dict, Any
 from pathlib import Path
+from typing import Any, Dict
 
 import joblib
 import tensorflow as tf

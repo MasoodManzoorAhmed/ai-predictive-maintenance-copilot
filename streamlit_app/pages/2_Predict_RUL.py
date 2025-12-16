@@ -10,7 +10,6 @@ import pandas as pd
 import requests
 import streamlit as st
 
-
 # ============================================================
 # FD rules (must match backend expectations)
 # ============================================================

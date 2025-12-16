@@ -1,4 +1,5 @@
 import os
+
 import pytest
 
 # GitHub Actions sets CI=true

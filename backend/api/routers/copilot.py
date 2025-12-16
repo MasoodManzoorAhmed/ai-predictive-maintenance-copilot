@@ -8,6 +8,7 @@ For Phase 6:
 """
 
 from fastapi import APIRouter
+
 from backend.api.models.requests import CopilotQueryRequest
 from backend.api.models.responses import CopilotResponse
 

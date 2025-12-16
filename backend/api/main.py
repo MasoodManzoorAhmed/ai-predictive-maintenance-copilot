@@ -28,13 +28,14 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend.api.routers.copilot import router as copilot_router
+
 # Routers
 from backend.api.routers.fd001 import router as fd001_router
 from backend.api.routers.fd002 import router as fd002_router
 from backend.api.routers.fd003 import router as fd003_router
 from backend.api.routers.fd004 import router as fd004_router
 from backend.api.routers.single_engine import router as single_engine_router
-from backend.api.routers.copilot import router as copilot_router
 
 
 # ----------------------------
