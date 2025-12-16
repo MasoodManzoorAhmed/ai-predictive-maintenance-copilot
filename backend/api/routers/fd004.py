@@ -1,6 +1,6 @@
 # backend/api/routers/fd004.py
 """
-FD004 RUL prediction router (thin but strict).
+FD004 RUL prediction router .
 """
 
 import pandas as pd

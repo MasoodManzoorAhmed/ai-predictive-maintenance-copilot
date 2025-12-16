@@ -2,7 +2,7 @@
 """
 NASA scoring + calibration utilities.
 
-We keep this separate so:
+I have kept this separate so:
 - Inference engine remains clean
 - Score logic is testable
 """
@@ -30,7 +30,7 @@ def nasa_asymmetric_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 
 def apply_nasa_calibration(y_pred: np.ndarray, shift: float, max_rul: float) -> np.ndarray:
     """
-    Calibration used in your notebook:
+    Calibration used in  notebook:
     - y_cal = clip(y_pred - shift, 0, max_rul)
     """
     y_pred = np.asarray(y_pred, dtype=np.float64)

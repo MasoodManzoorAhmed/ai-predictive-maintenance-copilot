@@ -117,7 +117,7 @@ def run_fd_inference(
     df_scaled[final_feature_cols] = X_scaled
 
     # ---- Build last-window sequences ----
-    # ✅ IMPORTANT: allow_padding=True -> skip_short=False -> pad to seq_len
+    #  IMPORTANT: allow_padding=True -> skip_short=False -> pad to seq_len
     X_seq, units = build_last_window_sequences(
         df=df_scaled,
         feature_cols=final_feature_cols,
@@ -148,7 +148,7 @@ def run_fd_inference(
         "nasa_shift": nasa_shift,
         "nasa_max_rul_cap": nasa_max_rul,
         "config_path": unified_entry.get("config_path", f"configs/{fd_name}_config.json"),
-        "allow_padding": bool(allow_padding),  # ✅ optional debug metadata
+        "allow_padding": bool(allow_padding),  # debug metadata
     }
 
     # ---- Metrics (optional) ----

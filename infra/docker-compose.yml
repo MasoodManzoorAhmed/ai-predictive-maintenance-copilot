@@ -1,5 +1,3 @@
-
-
 services:
   cmaps-api:
     build:
@@ -9,6 +7,10 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
+
+    # 🔑 MOUNT TRAINED MODELS INTO CONTAINER
+    volumes:
+      - ../models:/app/models:ro
 
     # ✅ HEALTHCHECK (enterprise-ready)
     healthcheck:
@@ -29,7 +31,6 @@ services:
       - API_BASE_URL=http://cmaps-api:8000
       - API_TIMEOUT=30
 
-    # ✅ WAIT FOR API TO BE HEALTHY
     depends_on:
       cmaps-api:
         condition: service_healthy

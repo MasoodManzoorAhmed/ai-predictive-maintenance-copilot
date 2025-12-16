@@ -77,7 +77,7 @@ def load_unified_model_index() -> Dict[str, Any]:
     """
     Loads unified_model_index.json from configs/.
 
-    IMPORTANT:
+    
     This file is OPTIONAL metadata ONLY.
     Example use: map FD -> config_path for UI/debugging.
 
