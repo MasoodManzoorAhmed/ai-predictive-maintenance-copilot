@@ -18,4 +18,5 @@
 !.streamlit/**
 !rag_index/
 !rag_index/**
-
+!requirements-ui.txt
+!requirements-ci.txt
