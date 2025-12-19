@@ -11,7 +11,7 @@ import requests
 import streamlit as st
 
 # ============================================================
-# FD rules (must match backend expectations)
+# FD rules 
 # ============================================================
 FD_RULES = {
     "FD001": {"min_cycles_batch": 30},
@@ -26,9 +26,7 @@ STATUS_THRESHOLDS = {"critical": 20, "warning": 60}
 # ============================================================
 # Helpers
 # ============================================================
-def get_api_base_url() -> str:
-    url = st.session_state.get("API_BASE_URL") or os.getenv("API_BASE_URL", "http://localhost:8000")
-    return str(url).strip().rstrip("/")
+
 
 
 def get_api_timeout() -> int:

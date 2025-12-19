@@ -7,7 +7,6 @@ from typing import List, Tuple
 
 import faiss  # type: ignore
 import numpy as np
-
 from pypdf import PdfReader  # type: ignore
 
 from backend.api.rag.docstore import Chunk, DocStore

@@ -14,10 +14,10 @@ Return schema matches CopilotResponse with structured sources.
 
 from __future__ import annotations
 
+import logging
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException, Request
-import logging
 
 from backend.api.models.requests import CopilotQueryRequest
 from backend.api.models.responses import CopilotResponse, CopilotSource

@@ -1,15 +1,15 @@
 # backend/api/rag/rag_pipeline.py
 from __future__ import annotations
 
-from functools import lru_cache
-from typing import Any, Dict, List, Optional, Tuple
-from pathlib import Path
 import logging
+from functools import lru_cache
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
+from .llm_client import call_llm
+from .prompting import build_rag_prompt
 from .rag_config import RAGConfig
 from .retriever import RAGRetriever
-from .prompting import build_rag_prompt
-from .llm_client import call_llm
 
 log = logging.getLogger("rag_pipeline")
 

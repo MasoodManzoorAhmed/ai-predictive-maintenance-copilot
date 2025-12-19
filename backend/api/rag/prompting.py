@@ -7,7 +7,6 @@ from typing import Any, Dict, List, Optional
 from .rag_config import RAGConfig
 from .retriever import RetrievedChunk
 
-
 _ALLOWED_STYLES = {"Checklist", "Concise", "Detailed"}
 _DEFAULT_STYLE = "Checklist"
 _DEFAULT_ROLE = "Maintenance Manager"

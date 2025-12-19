@@ -1,9 +1,10 @@
 # backend/api/rag/llm_synthesizer.py
 from __future__ import annotations
 
-import os
 import json
-from typing import List, Dict, Any
+import os
+from typing import Any, Dict, List
+
 import requests
 
 

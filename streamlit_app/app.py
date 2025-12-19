@@ -8,7 +8,6 @@ import requests
 import streamlit as st
 from dotenv import load_dotenv
 
-
 # ============================================================
 # ENV LOADING (SAFE FOR LOCAL + DOCKER + CLOUD)
 # - Loads streamlit_app/.env.local ONLY if it exists (local dev)

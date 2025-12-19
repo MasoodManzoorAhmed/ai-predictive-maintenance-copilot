@@ -1,15 +1,14 @@
 # scripts/query_rag.py
 from __future__ import annotations
 
-import os
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-import numpy as np
 import faiss
-
+import numpy as np
 
 # ============================================================
 # Suppress TF/oneDNN logs 
@@ -27,7 +26,6 @@ if str(ROOT) not in sys.path:
 
 # Reuse your project embedder (same model used during indexing)
 from backend.api.rag.embedder import embed_texts  # noqa: E402
-
 
 INDEX_DIR = ROOT / "rag_index"
 
