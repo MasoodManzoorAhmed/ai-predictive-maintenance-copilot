@@ -247,7 +247,7 @@ seq_len = FD_RULES.get(dataset, {}).get("seq_len", 30)
 batch_url = API_BASE_URL + get_batch_endpoint(dataset)
 single_url = API_BASE_URL + get_single_endpoint()
 
-st.title("📊 Phase 8.1 — Analytics")
+st.title("📊 Analytics")
 st.caption(f"Dataset: **{dataset}** | Default sequence length: **{seq_len}**")
 st.caption(f"Batch endpoint: `{batch_url}` | Single endpoint: `{single_url}`")
 

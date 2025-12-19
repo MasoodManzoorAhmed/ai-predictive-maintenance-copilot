@@ -83,9 +83,9 @@ payload = {"records": out_df.to_dict(orient="records")}
 out_json = OUT_DIR / f"fd004_multi_engine_{N_UNITS}units_tail{SEQ_LEN}.json"
 out_json.write_text(json.dumps(payload, indent=2))
 
-print("✅ Multi-engine demo CSV created:")
+print(" Multi-engine demo CSV created:")
 print("   ", out_csv.resolve())
-print("✅ Multi-engine demo JSON created (for API):")
+print(" Multi-engine demo JSON created (for API):")
 print("   ", out_json.resolve())
-print(f"✅ Units included: {picked_units}")
-print(f"✅ Rows: {len(out_df)} (should be {N_UNITS * SEQ_LEN})")
+print(f" Units included: {picked_units}")
+print(f" Rows: {len(out_df)} (should be {N_UNITS * SEQ_LEN})")

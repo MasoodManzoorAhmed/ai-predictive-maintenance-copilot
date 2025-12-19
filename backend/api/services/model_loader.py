@@ -12,7 +12,6 @@ Design rules:
 - No FastAPI imports here
 - Pure loading + caching
 
-SOURCE OF TRUTH:
 - Paths come from the FD config JSON (configs/FD00X_config.json)
 """
 
@@ -24,7 +23,7 @@ import tensorflow as tf
 
 from backend.api.utils.config_reader import load_fd_config, project_root
 
-# In-memory cache (process-level)
+# In-memory cache 
 _MODEL_CACHE: Dict[str, Any] = {}
 _SCALER_CACHE: Dict[str, Any] = {}
 

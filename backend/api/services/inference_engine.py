@@ -9,7 +9,7 @@ Responsibilities:
 - Run model prediction
 - Apply NASA calibration and metrics
 
-STRICT RULES:
+
 - No FastAPI code here
 - No disk writes here
 - Deterministic behavior only
@@ -60,7 +60,7 @@ def run_fd_inference(
     fd_name = fd_name.upper().strip()
     logger.info(f"Starting inference for {fd_name}")
 
-    # ---- Load configs (source of truth) ----
+    # ---- Load configs ----
     cfg = load_fd_config(fd_name)
 
     # unified index is OPTIONAL metadata only
@@ -151,7 +151,7 @@ def run_fd_inference(
         "allow_padding": bool(allow_padding),  # debug metadata
     }
 
-    # ---- Metrics (optional) ----
+    # ---- Metrics ----
     if y_true is not None:
         rmse, mae = rmse_mae(y_true, y_pred_cal)
         nasa_score = nasa_asymmetric_score(y_true, y_pred_cal)

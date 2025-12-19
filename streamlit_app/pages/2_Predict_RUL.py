@@ -245,7 +245,13 @@ def validate_min_cycles_per_unit(df: pd.DataFrame, unit_col: Optional[str], fd_n
 # ============================================================
 # UI
 # ============================================================
-st.set_page_config(page_title="Predict RUL", layout="wide")
+def get_api_base_url() -> str:
+    url = st.session_state.get("API_BASE_URL") or os.getenv("API_BASE_URL", "").strip()
+    if not url:
+        st.error("API_BASE_URL is not set. Set it in Cloud Run env vars or in streamlit_app/.env.local for local.")
+        st.stop()
+    return str(url).strip().rstrip("/")
+
 
 API_BASE_URL = get_api_base_url()
 API_TIMEOUT = get_api_timeout()

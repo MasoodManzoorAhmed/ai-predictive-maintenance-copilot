@@ -6,7 +6,6 @@ Responsibilities:
 - Apply rolling statistics and deltas per engine unit
 - Keep logic consistent with the Colab unified pipeline
 
-Important:
 - Rolling features must be computed per unit (engine).
 - We build new columns in a dict then concat once (avoids fragmentation).
 """
@@ -48,7 +47,7 @@ def apply_rolling_and_delta_features(
 
     for s in sensor_cols:
         if s not in df_sorted.columns:
-            # If a sensor is missing, that's a hard error: your config and input mismatch
+            # If a sensor is missing, that's a hard error: config and input mismatch
             raise KeyError(f"Missing required sensor column: {s}")
 
         # rolling mean/std (short)

@@ -50,7 +50,7 @@ def build_last_window_sequences(
         if len(g) < seq_len:
             if skip_short:
                 continue
-            # pad (rarely used; skip is safer)
+            # pad 
             pad_len = seq_len - len(g)
             pad = np.repeat(g[feature_cols].iloc[[0]].values, pad_len, axis=0)
             seq = np.vstack([pad, g[feature_cols].values])

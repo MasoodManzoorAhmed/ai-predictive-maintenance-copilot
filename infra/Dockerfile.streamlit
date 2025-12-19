@@ -1,25 +1,23 @@
 # infra/Dockerfile.streamlit
 FROM python:3.10-slim
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# Light system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements from project root (because compose uses context: ..)
 COPY requirements.txt /app/requirements.txt
 
-# Install deps
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
-    && pip install --no-cache-dir -r /app/requirements.txt
+  && pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy streamlit app folder
 COPY streamlit_app/ /app/streamlit_app/
+COPY .streamlit/ /app/.streamlit/
 
-EXPOSE 8501
+EXPOSE 8080
 
-# ✅ Robust: run Streamlit via python -m
-CMD ["python", "-m", "streamlit", "run", "streamlit_app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["sh", "-lc", "streamlit run streamlit_app/app.py --server.address=0.0.0.0 --server.port=${PORT} --server.headless=true --browser.gatherUsageStats=false --server.enableCORS=false --server.enableXsrfProtection=false"]

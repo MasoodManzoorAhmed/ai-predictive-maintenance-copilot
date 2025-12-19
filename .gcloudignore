@@ -1,0 +1,21 @@
+# Ignore everything by default
+**
+
+# But include what the API needs
+!backend/**
+!infra/**
+!configs/**
+!models/**
+!samples/**
+!cloudbuild.api.yaml
+!*.json
+!README.md
+!requirements.txt
+!streamlit_app/**
+!Dockerfile.streamlit
+!infra/cloudbuild.streamlit.yaml
+!.streamlit/
+!.streamlit/**
+!rag_index/
+!rag_index/**
+

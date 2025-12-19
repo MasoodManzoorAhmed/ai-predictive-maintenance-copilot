@@ -54,9 +54,14 @@ COPY configs /app/configs
 # NOTE: Make sure `.dockerignore` is NOT excluding `models/`
 RUN mkdir -p /app/models
 COPY models /app/models
+# ----------------------
+# RAG index (Copilot)
+# ----------------------
+RUN mkdir -p /app/rag_index
+COPY rag_index /app/rag_index
 
 # ----------------------
-# Swagger payloads are optional (CI/Cloud Build might not upload them)
+# Swagger payloads 
 RUN mkdir -p /app/samples/payloads
 COPY samples/payloads/*.json /app/samples/payloads/
 
@@ -65,7 +70,6 @@ COPY samples/payloads/*.json /app/samples/payloads/
 # Expose API port
 # ----------------------
 # Cloud Run expects 8080 by default.
-# Locally you can still map 8000->8080 if you want.
 EXPOSE 8080
 
 # ----------------------

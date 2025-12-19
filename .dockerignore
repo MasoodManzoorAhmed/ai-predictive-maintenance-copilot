@@ -21,3 +21,7 @@ data/
 
 # Logs
 *.log
+
+
+!.streamlit/
+!.streamlit/config.toml

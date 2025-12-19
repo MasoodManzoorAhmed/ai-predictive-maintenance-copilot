@@ -2,17 +2,39 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 import requests
 import streamlit as st
 from dotenv import load_dotenv
 
-# Load environment variables early
-load_dotenv()
+
+# ============================================================
+# ENV LOADING (SAFE FOR LOCAL + DOCKER + CLOUD)
+# - Loads streamlit_app/.env.local ONLY if it exists (local dev)
+# - In Docker/Cloud, pass env vars via runtime (Compose / Cloud Run)
+# ============================================================
+LOCAL_ENV = Path(__file__).resolve().parent / ".env.local"  # streamlit_app/.env.local
+if LOCAL_ENV.exists():
+    load_dotenv(LOCAL_ENV)
 
 
 def get_api_base_url() -> str:
-    url = os.getenv("API_BASE_URL", "http://localhost:8000").strip()
+    """
+    Priority:
+    1) API_BASE_URL from environment (Docker/Cloud Run/CI should set this)
+    2) fallback to local default (127.0.0.1) ONLY for local development
+
+    NOTE (Cloud Run):
+    - You MUST set API_BASE_URL in the Cloud Run Streamlit service.
+      Example: https://cmaps-api-xxxxx-<region>.a.run.app
+    """
+    url = os.getenv("API_BASE_URL", "").strip()
+
+    # Local dev fallback only
+    if not url:
+        url = "http://127.0.0.1:8000"
+
     return url.rstrip("/")
 
 
@@ -27,13 +49,14 @@ def get_api_timeout() -> int:
 API_BASE_URL = get_api_base_url()
 API_TIMEOUT = get_api_timeout()
 
-# Only set defaults once (Streamlit reruns the file often)
+# Only set defaults once (Streamlit reruns the script often)
 if "API_BASE_URL" not in st.session_state:
     st.session_state["API_BASE_URL"] = API_BASE_URL
 if "API_TIMEOUT" not in st.session_state:
     st.session_state["API_TIMEOUT"] = API_TIMEOUT
 
 st.set_page_config(page_title="AI Predictive Maintenance Copilot", layout="wide")
+
 
 # ----------------------------
 # Sidebar (global app controls)
@@ -46,7 +69,6 @@ dataset = st.sidebar.selectbox(
     ["FD001", "FD002", "FD003", "FD004"],
     index=0,
 )
-
 st.session_state["selected_dataset"] = dataset
 
 st.sidebar.divider()
@@ -54,6 +76,12 @@ st.sidebar.markdown("### 🔌 Backend")
 
 st.sidebar.write("API Base URL:")
 st.sidebar.code(st.session_state["API_BASE_URL"])
+
+# Extra: show a warning if you're clearly in cloud but still on localhost
+if "127.0.0.1" in st.session_state["API_BASE_URL"] or "localhost" in st.session_state["API_BASE_URL"]:
+    st.sidebar.warning(
+        "You are pointing to localhost. For Cloud Run, set API_BASE_URL to the Cloud Run API URL."
+    )
 
 if st.sidebar.button("Health Check"):
     try:
@@ -68,8 +96,9 @@ if st.sidebar.button("Health Check"):
     except Exception as e:
         st.sidebar.error(f"❌ Cannot reach API: {e}")
 
+
 # ----------------------------
-# Main landing page (simple)
+# Main landing page
 # ----------------------------
 st.title("AI Predictive Maintenance Copilot")
 st.write(

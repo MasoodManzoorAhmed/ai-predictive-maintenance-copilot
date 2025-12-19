@@ -1,0 +1,28 @@
+# infra/cloudbuild.streamlit.yaml
+# Purpose:
+# - Build Streamlit UI Docker image
+# - Push image to Artifact Registry
+# - Env vars are injected at Cloud Run deploy time
+
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--platform=linux/amd64",
+        "-f",
+        "infra/Dockerfile.streamlit",
+        "-t",
+        "europe-west2-docker.pkg.dev/$PROJECT_ID/cmaps/cmaps-ui:latest",
+        "."
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "europe-west2-docker.pkg.dev/$PROJECT_ID/cmaps/cmaps-ui:latest"
+      ]
+
+images:
+  - "europe-west2-docker.pkg.dev/$PROJECT_ID/cmaps/cmaps-ui:latest"

@@ -1,0 +1,22 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--platform=linux/amd64",
+        "-f",
+        "infra/Dockerfile.api",
+        "-t",
+        "europe-west2-docker.pkg.dev/$PROJECT_ID/cmaps/cmaps-api:latest",
+        "."
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "europe-west2-docker.pkg.dev/$PROJECT_ID/cmaps/cmaps-api:latest"
+      ]
+
+images:
+  - "europe-west2-docker.pkg.dev/$PROJECT_ID/cmaps/cmaps-api:latest"

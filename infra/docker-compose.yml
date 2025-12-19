@@ -8,11 +8,11 @@ services:
       - "8000:8000"
     restart: unless-stopped
 
-    # 🔑 MOUNT TRAINED MODELS INTO CONTAINER
+    # MOUNT TRAINED MODELS INTO CONTAINER
     volumes:
       - ../models:/app/models:ro
 
-    # ✅ HEALTHCHECK (enterprise-ready)
+    # HEALTHCHECK
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -27,9 +27,10 @@ services:
     container_name: cmaps_streamlit
     ports:
       - "8501:8501"
-    environment:
-      - API_BASE_URL=http://cmaps-api:8000
-      - API_TIMEOUT=30
+
+    # Load API_BASE_URL + API_TIMEOUT from a docker env file
+    env_file:
+      - ./.env.docker
 
     depends_on:
       cmaps-api:

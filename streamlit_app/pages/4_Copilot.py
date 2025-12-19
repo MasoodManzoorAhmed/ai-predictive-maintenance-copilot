@@ -489,7 +489,7 @@ batch_url = API_BASE_URL + get_batch_endpoint(dataset)
 single_url = API_BASE_URL + get_single_endpoint()
 copilot_url = API_BASE_URL + get_copilot_endpoint()
 
-st.title("🧠 Phase 8.2 — Maintenance Copilot (Rule-Based, No LLM)")
+st.title("🧠  Maintenance Copilot (Local Rules + Backend RAG/LLM) ")
 st.caption(f"Dataset: **{dataset}** | seq_len required: **{seq_len}**")
 st.caption(f"Batch endpoint: `{batch_url}` | Single endpoint: `{single_url}` | Copilot endpoint: `{copilot_url}`")
 
@@ -567,66 +567,93 @@ else:
 
 st.divider()
 
+
+# Backend Copilot  (RAG — LLM optional)
 # ------------------------------------------------------------
-# Backend Copilot (NO LLM)
-# ------------------------------------------------------------
-with st.expander("🤖 Backend Copilot (NO LLM) — uses /copilot/query (fixed schema)", expanded=True):
-    st.caption("Calls FastAPI Copilot endpoint. Payload uses fd_name/unit/extra (avoids 422).")
+st.subheader("🤖 Backend Copilot ")
+st.caption("Calls FastAPI Copilot endpoint. Payload uses fd_name/unit/extra")
 
-    q_default = "Give maintenance recommendation based on risk band and what I should do next."
-    question = st.text_area("Copilot question", value=q_default, height=80)
+# Persist debug info safely
+if "copilot_debug_payload" not in st.session_state:
+    st.session_state["copilot_debug_payload"] = None
+if "copilot_debug_response" not in st.session_state:
+    st.session_state["copilot_debug_response"] = None
 
-    bc1, bc2, bc3 = st.columns([1, 1, 2])
-    with bc1:
-        unit_str = st.text_input("Optional unit (integer)", value="")
-    with bc2:
-        style = st.selectbox("Response style", ["Checklist", "Concise", "Detailed"], index=0)
-    with bc3:
-        role = st.selectbox("Role", ["Maintenance Manager", "Technician", "Reliability Engineer"], index=0)
+q_default = "Give maintenance recommendation based on risk band and what I should do next."
+question = st.text_area("Copilot question", value=q_default, height=80)
 
-    extra = {"style": style, "role": role, "phase": "8_no_llm"}
+bc1, bc2, bc3 = st.columns([1, 1, 2])
+with bc1:
+    unit_str = st.text_input("Optional unit (integer)", value="")
+with bc2:
+    style = st.selectbox("Response style", ["Checklist", "Concise", "Detailed"], index=0)
+with bc3:
+    role = st.selectbox("Role", ["Maintenance Manager", "Technician", "Reliability Engineer"], index=0)
 
-    unit_val: Optional[int] = None
-    if unit_str.strip():
-        if unit_str.strip().isdigit():
-            unit_val = int(unit_str.strip())
+extra = {"style": style, "role": role, "phase": "10_rag_ui"}
+
+unit_val: Optional[int] = None
+if unit_str.strip():
+    if unit_str.strip().isdigit():
+        unit_val = int(unit_str.strip())
+    else:
+        st.warning("Unit must be an integer. Leaving unit empty is fine.")
+
+call_backend = st.button("Ask Backend Copilot", type="primary")
+
+if call_backend:
+    payload = build_backend_copilot_payload(
+        question=question,
+        fd_name=dataset,
+        unit=unit_val,
+        extra=extra,
+    )
+
+    st.session_state["copilot_debug_payload"] = payload
+
+    try:
+        with st.spinner("Calling /copilot/query ..."):
+            r = requests.post(copilot_url, json=payload, timeout=API_TIMEOUT)
+
+        if r.status_code != 200:
+            st.error(f"Copilot API error {r.status_code}")
+            st.code(r.text[:1500])
+            st.session_state["copilot_debug_response"] = r.text
         else:
-            st.warning("Unit must be an integer. Leaving unit empty is fine.")
+            out = r.json()
+            st.session_state["copilot_debug_response"] = out
 
-    call_backend = st.button("Ask Backend Copilot", type="primary")
-    if call_backend:
-        payload = build_backend_copilot_payload(question=question, fd_name=dataset, unit=unit_val, extra=extra)
+            answer = out.get("answer") if isinstance(out, dict) else ""
 
-        try:
-            with st.spinner("Calling /copilot/query ..."):
-                r = requests.post(copilot_url, json=payload, timeout=API_TIMEOUT)
+            st.success("Copilot response received ✅")
+            st.markdown("### Answer")
+            st.write(answer if answer else "(No `answer` field in response)")
 
-            if r.status_code != 200:
-                st.error(f"Copilot API error {r.status_code}")
-                st.code(r.text[:1500])
-            else:
-                out = r.json()
-                answer = ""
-                if isinstance(out, dict):
-                    answer = out.get("answer") or out.get("response") or ""
+            if isinstance(out, dict) and out.get("sources"):
+                st.markdown("### Sources / Evidence")
+                st.json(out.get("sources"))
 
-                st.success("Copilot response received ✅")
-                st.markdown("### Answer")
-                st.write(answer if answer else "(No `answer` field in response)")
+    except Exception as e:
+        st.error(f"Request failed: {e}")
+        st.info("Check API_BASE_URL, FastAPI running, and /copilot/query route exists.")
 
-                if isinstance(out, dict) and out.get("sources"):
-                    st.markdown("### Sources / Evidence")
-                    st.json(out.get("sources"))
+# ------------------------------------------------------------
+# Debug sections (TOP-LEVEL — Streamlit safe)
+# ------------------------------------------------------------
+if st.session_state.get("copilot_debug_payload") is not None:
+    with st.expander("🛠 Debug payload"):
+        st.code(
+            json.dumps(st.session_state["copilot_debug_payload"], indent=2),
+            language="json",
+        )
 
-                with st.expander("Debug payload"):
-                    st.code(json.dumps(payload, indent=2), language="json")
+if st.session_state.get("copilot_debug_response") is not None:
+    with st.expander("🛠 Debug response JSON"):
+        st.code(
+            json.dumps(st.session_state["copilot_debug_response"], indent=2),
+            language="json",
+        )
 
-                with st.expander("Debug response JSON"):
-                    st.code(json.dumps(out, indent=2), language="json")
-
-        except Exception as e:
-            st.error(f"Request failed: {e}")
-            st.info("Check API_BASE_URL, FastAPI running, and /copilot/query route exists.")
 
 st.divider()
 
@@ -782,7 +809,7 @@ if mode.startswith("Single unit"):
         st.info("No numeric sensor columns found for drift analysis.")
         st.stop()
 
-    max_features = st.slider("How many features to analyze", 5, min(40, len(sensor_cols)), min(15, len(sensor_cols)))
+    max_features = min(15, len(sensor_cols))  # fixed, no UI control
     trends = compute_trend_slopes(win, cycle_col=cycle_col, sensor_cols=sensor_cols).head(max_features)
 
     if len(trends) == 0:

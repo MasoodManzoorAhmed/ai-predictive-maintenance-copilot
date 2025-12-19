@@ -8,22 +8,51 @@ Responsibilities:
 - Provide clean getters for FD configs + unified index
 
 Design:
-- Keep file paths relative to project root.
-- Avoid hardcoding Google Drive paths.
+- Prefer container-safe absolute paths when running in Docker/Cloud Run.
+- Fall back to repo-relative paths for local development.
 """
 
 import json
+import os
 from pathlib import Path
 from typing import Any, Dict
 
 
 def project_root() -> Path:
     """
-    Returns repository root based on this file location.
-    Assumes: backend/api/utils/config_reader.py
-    Root is 4 levels up: utils -> api -> backend -> <root>
+    Determine the repo root robustly.
+
+    Cloud Run/Docker:
+      - We copy configs to /app/configs
+      - So /app is the effective "project root"
+
+    Local dev:
+      - Walk up from this file until we find a folder that contains "configs/"
     """
-    return Path(__file__).resolve().parents[3]
+    # 1) Strong container default
+    container_root = Path("/app")
+    if (container_root / "configs").exists():
+        return container_root
+
+    # 2) Optional override (useful for tests or nonstandard layouts)
+    env_root = os.getenv("PROJECT_ROOT")
+    if env_root:
+        p = Path(env_root).resolve()
+        if (p / "configs").exists():
+            return p
+
+    # 3) Local dev fallback: search upwards
+    here = Path(__file__).resolve()
+    for p in [here] + list(here.parents):
+        if (p / "configs").exists():
+            return p
+
+    # 4) Fail loudly with a helpful message
+    raise FileNotFoundError(
+        "Could not locate project root (configs/ not found). "
+        "Expected /app/configs in container or a configs/ folder in repo. "
+        "You can set PROJECT_ROOT env var if needed."
+    )
 
 
 def configs_dir() -> Path:
@@ -56,7 +85,6 @@ def load_fd_config(fd_name: str) -> Dict[str, Any]:
     path = configs_dir() / f"{fd_name}_config.json"
     cfg = load_json(path)
 
-    # Light validation (strict validation happens in services)
     required = [
         "final_feature_columns",
         "sequence_length",
@@ -77,7 +105,6 @@ def load_unified_model_index() -> Dict[str, Any]:
     """
     Loads unified_model_index.json from configs/.
 
-    
     This file is OPTIONAL metadata ONLY.
     Example use: map FD -> config_path for UI/debugging.
 
@@ -85,6 +112,5 @@ def load_unified_model_index() -> Dict[str, Any]:
     """
     path = configs_dir() / "unified_model_index.json"
     if not path.exists():
-        # allow project to run even if you remove it
         return {}
     return load_json(path)

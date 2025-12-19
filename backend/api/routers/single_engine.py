@@ -7,7 +7,7 @@ Use-case:
 - API returns one calibrated RUL prediction
 
 Design:
-- Reuse inference_engine with allow_padding=True (demo friendly)
+- Reusing inference_engine with allow_padding=True
 """
 
 import pandas as pd
@@ -35,7 +35,7 @@ def predict_single_engine(request: SingleEngineRequest):
         if "cycle" not in df.columns:
             df["cycle"] = list(range(1, len(df) + 1))
 
-        # Padding enabled for single-engine demo/UI calls
+        # Padding enabled for single-engine 
         out = run_fd_inference(fd_name, df_input=df, allow_padding=True)
 
         if len(out["units"]) != 1:

@@ -10,7 +10,7 @@ import pandas as pd
 # =============================
 FDS = ["FD001", "FD002", "FD003", "FD004"]
 
-# Where your raw CMAPSS train files are (preferred)
+# Where raw CMAPSS train files are 
 # data/cmapps/train_FD001.txt etc.
 RAW_DIR_PREFERRED = Path("data") / "cmapps"
 
@@ -35,11 +35,7 @@ COLS = (
 # HELPERS
 # =============================
 def choose_best_match(matches: list[Path]) -> Path:
-    """
-    Choose most likely correct dataset file from multiple hits:
-    1) prefer paths containing cmapss/cmapps
-    2) prefer shortest path
-    """
+    
     def score(p: Path) -> tuple:
         s = str(p).lower()
         has_cmapss = ("cmapss" in s) or ("cmapps" in s)
