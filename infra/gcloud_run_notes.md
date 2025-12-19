@@ -87,3 +87,25 @@ Before building and deploying:
 - Run locally to confirm nothing broke
 - Commit clean changes to Git
 - Rebuild and redeploy UI/API containers
+
+---
+
+## 7) Current Cloud Run Endpoints (Reference)
+
+> ⚠️ These URLs are **deployment references**.
+> They may change if the services are redeployed, renamed, or moved to another project/region.
+
+### Backend API (FastAPI)
+- Service name: `cmaps-api`
+- Cloud Run URL:
+  https://cmaps-api-419391401356.europe-west2.run.app
+
+### Frontend UI (Streamlit)
+- Service name: `cmaps-ui`
+- Cloud Run URL:
+  https://cmaps-ui-419391401356.europe-west2.run.app
+
+### UI → API Connectivity
+- The UI calls the backend using:
+  ```bash
+  API_BASE_URL=https://cmaps-api-419391401356.europe-west2.run.app
