@@ -25,3 +25,4 @@ data/
 
 !.streamlit/
 !.streamlit/config.toml
+!requirements-ui.txt
